@@ -4,17 +4,26 @@
 .flexbox-container {
     display: flex;
     flex-direction:column;
+    height: 100vh;
 }
 .section {
     width: 100%;
     background-color: #121212;
-    border: 3px solid #333;
+    /*border: 3px solid #333; */
     color: white;
+}
+body {
+    overflow-x: hidden;
+    background-color: #121212;
 }
 * {
     font-family: 'Roboto Mono', monospace;
     padding: 0;
     margin: 0;
+
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
 }
 
 .header {
@@ -23,6 +32,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 10px;
+
+
+    
 }
 
 .description {
@@ -30,6 +43,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 150px;
+
 }
 
 .description h2 {
@@ -41,14 +56,17 @@
     display: flex;
     flex-wrap: wrap;
     min-height: 500px;
+    margin-bottom: auto;
+
 }
 
 .images {
-    width: 100%;
     min-height: 200px;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    position: relative;
+    left: 40vh;
+    transform: translate(0%);
+
 
 }
 
@@ -56,6 +74,9 @@
     margin: 10px;
 
 
+}
+
+.footer {
 }
 
 .slider-container {

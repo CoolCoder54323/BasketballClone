@@ -3,8 +3,10 @@ var PPG = 0
 var APG = 0
 var TRB = 0
 var imageReady = false
+let canScroll = false
 
 let hashMap = new Map();
+const track = document.querySelector(".images");
 
 
 
@@ -14,6 +16,26 @@ function setSliders(slider) {
     slider.oninput();
 }
 
+window.onmousedown = e => {
+    canScroll = true
+   track.dataset.mouseDownAt = e.clientX;
+   console.log("Hii" + track.dataset.mouseDownAt)
+}
+window.onmouseup = (mouse) => {
+    canScroll = false
+    track.dataset.mouseDownAt = "0"
+    track.dataset.pastPercent = track.dataset.percentage
+}
+window.onmousemove = e => {
+    if(track.dataset.mouseDownAt==="0" || canScroll === false ) return;
+    const mouseDelta = parseFloat(track.dataset.mouseDownAt) - e.clientX,
+          maxDelta = window.innerWidth / 2;
+
+    const percentage = (mouseDelta/maxDelta) * -100,
+            nextPercentage = Math.min(Math.max(parseFloat(track.dataset.pastPercent) + percentage,-100),100);
+    track.dataset.percentage = nextPercentage
+    track.animate({ transform: `translate(${nextPercentage}%)`},{duration:500, fill:"forwards"})
+}
 function updateSlider(){
         let id = this.id.split('-')[0]
         let valueId = id + '-value';
@@ -37,7 +59,7 @@ function updateSlider(){
             return true
         });
         console.log(names)
-        addImages(names,widths)
+        addImages(names,width,heightMode="Max",40)
         
 
         document.getElementById(valueId).textContent = this.value;
@@ -48,8 +70,7 @@ function updateSlider(){
 function addImages(fnames,fwidths,heightMode="Max",height=-1,max=70) {
 
     console.log("Adding Images")
-    var container = document.querySelector(".images");
-    container.innerHTML = ''; // Clear existing content
+    track.innerHTML = ''; // Clear existing content
     if(heightMode==="Max")
     {
         if(height === -1){
@@ -96,6 +117,7 @@ function addImage(fname, fwidth,height )
     dynamicImage.style.height = `${Math.round(height)}vh`;
     width = Math.round((height * fwidth) * 10) / 10
     dynamicImage.style.width = `${width}vh`;
+    dynamicImage.setAttribute("draggable","false")
 
 
 
