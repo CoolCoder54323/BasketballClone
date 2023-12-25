@@ -10,25 +10,53 @@ document.querySelectorAll('.slider').forEach(slider => {
 
 function addImages(fnames,fwidths,heightMode="Max",height=-1,max=70) {
 
-        
+    console.log("Adding Images")
     if(heightMode==="Max")
     {
-        fnames.forEach((item,index)=> {
-            addImage(item,fwidths[index],max)
+        var testarray = [0,2,3,4]
+        console.log(testarray)
+        testarray.forEach(value => {
+            console.log(value)
         })
+        console.log("Max mode")
+        console.log(fnames)
+        console.log(fnames[1])
+        console.log(fnames)
+        let [firstFruit, secondFruit] = fnames;
+        console.log(firstFruit); // 'apple'
+        console.log(secondFruit); // 'banana'
+        for (let element of fnames) {
+            console.log(element);
+        }
+        fnames.forEach((item, index) => {
+            console.log('Current item:', item);
+        });
+        fnames.forEach((item,index)=> {
+            console.log(item)
+            if(addImage(item,fwidths[index],max) != 0){
+                console.error("Image Adding Error")
+            }
+        })
+        console.log("All done :(")
+        console.log(fnames)
     }
     else if(heightMode === "fading-right")
     {
         if(height === -1)
         {
             fnames.forEach((item,index)=> {
-                addImage(item,fwidths[index],max*Math.pow(0.95,index))
+                if(addImage(item,fwidths[index],max*Math.pow(0.95,index))!==0){
+                    console.error("Image Adding Error")
+                }
+                
             }) 
         }
         else if(height > 0 )
         {
             fnames.forEach((item,index)=> {
-                addImage(item,fwidths[index],height*Math.pow(0.95,index))
+                if(addImage(item,fwidths[index],height*Math.pow(0.95,index))!==0){
+                    console.error("Image Adding Error")
+                }
             }) 
         }
     }
@@ -38,7 +66,7 @@ function addImage(fname, fwidth,height ) {
     // Create a new div element
     var newDiv = document.createElement("div");
     height = Math.round(height)
-
+    console.log(`Loading ${fname} at ${fwidth}vh long and ${height}vh tall`)
     // Optionally, set some properties on the new div
     newDiv.className = "image-div";
     let dynamicImage = document.createElement('img');
@@ -59,10 +87,32 @@ function addImage(fname, fwidth,height ) {
     targetElements.forEach(function(target) {
         target.appendChild(newDiv.cloneNode(true)); // cloneNode is used to append the div to multiple targets
     });
+
 }
+var names = [""], widths = [""]
+var data
+console.log(("Fetching"))
+fetch('./players.json')
+    .then((response) => response.json())
+    .then((json) => {
+        data = json
+        console.log("lofe")
+        if(console.log(json)){
+            console.log("What th")
+        }
+        
 
-var names = ["Joel_Embiid","Lebron_James","Anthony_Edwards","Micheal_Jordan"]
-var widths = [0.4, 0.4,0.5,0.5]
+        names.length = json.length
+        widths.length = json.length
+        json.forEach((player,index)=>
+        {
+            names[index] = player.name
+            widths[index] = player.ratio
+            
+        })
+        addImages(names,widths)
+    }).catch(error => console.error('Error:', error));
+    console.log(data)
 
 
-addImages(names,widths,"fading-right")
+
