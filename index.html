@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NBA All Time</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="flexbox-container">
+        <div class="section header">
+            <h1>NBA's All Time At Least</h1>
+        </div>
+        <div class="section description">
+            <h2>Adjust the Sliders to see players in NBA history </br> with at least that stat line!</h2>
+        </div>
+        <div class="section content">
+            <div class="images">
+                
+            </div>
+            <div class="sliders">
+                <div class="slider-container">
+                    <label class="slider-label" for="ppg-slider">PPG: <span id="ppg-value"></span></label>
+                    <input type="range" id="ppg-slider" min="0" max="30" value="15" class="slider">
+                </div>
+            
+                <div class="slider-container">
+                    <label class="slider-label" for="apg-slider">APG: <span id="apg-value"></span></label>
+                    <input type="range" id="apg-slider" min="0" max="15" value="8" class="slider">
+                </div>
+            
+                <div class="slider-container">
+                    <label class="slider-label" for="trb-slider">TRB: <span id="trb-value"></span></label>
+                    <input type="range" id="trb-slider" min="0" max="20" value="10" class="slider">
+                </div>
+            </div>
+        </div>
+        <div class="section footer">
+            The footnotes links and resources
+        </div>
+    </div>
+    <script src="script.js"></script>
+
+</body>
+</html>
