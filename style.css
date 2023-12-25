@@ -3,7 +3,7 @@
 
 .flexbox-container {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction:column;
 }
 .section {
     width: 100%;
@@ -47,12 +47,13 @@
     width: 100%;
     min-height: 200px;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
 
 }
 
 .image-div {
+    margin: 10px;
 
 
 }
