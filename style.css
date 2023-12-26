@@ -43,7 +43,6 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 150px;
 
 }
 
@@ -53,10 +52,14 @@ body {
 }
 
 .content {
+    padding-top: 150px;
+    background-origin: border-box;
+    background-size: auto;
     display: flex;
     flex-wrap: wrap;
     min-height: 500px;
     margin-bottom: auto;
+    background-image: url('backgroundImages/symbol-scatter-haikei.svg');
 
 }
 
@@ -80,12 +83,19 @@ body {
 }
 
 .slider-container {
+    display: flex;
+    flex-direction: column;
     margin: 20px;
 }
 
+.sliders {
+    margin-top: 20px;
+}
+
 .slider-label {
-    display: block;
+    font-weight: 100;
     margin-bottom: 5px;
+    text-align: center;
 }
 
 .sliders {
@@ -94,5 +104,21 @@ body {
     width: 100%;
     align-items: center;
     
+}
+
+.textbox {
+    background-color: transparent; /* Makes the background transparent */
+    border: 0px solid grey; /* Adds a border to the input */
+    color: aliceblue;
+    text-align: center;
+    font-size: 50px;
+    width: 3em;
+    user-select: none; /* Prevents text inside the textbox from being selected */
+
+}
+
+.textbox:focus {
+    outline: none; /* Removes the outline on focus */
+
 }
 

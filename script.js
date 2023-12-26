@@ -3,31 +3,36 @@ var PPG = 0
 var APG = 0
 var TRB = 0
 var imageReady = false
-let canScroll = false
 
 let hashMap = new Map();
 const track = document.querySelector(".images");
+var textBoxes = document.querySelectorAll("#myTextBox")
+
+var names = [""], widths = [""]
+var data
 
 
 
-// JavaScript to update the label with the current value of the slider
-function setSliders(slider) {
-    slider.oninput = updateSlider
-    slider.oninput();
+
+
+//update the label with the current value of the slider
+function setTextboxes(textbox) {
+    textbox.oninput = updateTextbox
+    textbox.oninput();
 }
 
 window.onmousedown = e => {
-    canScroll = true
    track.dataset.mouseDownAt = e.clientX;
    console.log("Hii" + track.dataset.mouseDownAt)
 }
 window.onmouseup = (mouse) => {
-    canScroll = false
     track.dataset.mouseDownAt = "0"
     track.dataset.pastPercent = track.dataset.percentage
 }
 window.onmousemove = e => {
-    if(track.dataset.mouseDownAt==="0" || canScroll === false ) return;
+    var element = document.querySelector('.content');
+
+    if(track.dataset.mouseDownAt==="0") return;
     const mouseDelta = parseFloat(track.dataset.mouseDownAt) - e.clientX,
           maxDelta = window.innerWidth / 2;
 
@@ -35,10 +40,29 @@ window.onmousemove = e => {
             nextPercentage = Math.min(Math.max(parseFloat(track.dataset.pastPercent) + percentage,-100),100);
     track.dataset.percentage = nextPercentage
     track.animate({ transform: `translate(${nextPercentage}%)`},{duration:500, fill:"forwards"})
+    element.animate({backgroundPosition: `-${nextPercentage}%0%`},{duration:500, fill:"forwards"})
+    
+
 }
-function updateSlider(){
+
+
+function updateBox() {
+
+    let id = this.id.split('-')[0]
+
+    switch(id)
+    {
+        case 'ppg':
+            PPG = this.value
+        case 'apg':
+            APG = this.value
+        case 'trb':
+            TRB = this.value
+    }
+
+}
+function updateTextbox(){
         let id = this.id.split('-')[0]
-        let valueId = id + '-value';
         switch(id)
         {
             case 'ppg':
@@ -48,23 +72,25 @@ function updateSlider(){
             case 'trb':
                 TRB = this.value
         }
-        var removees = []
+}
+
+document.addEventListener('keydown', (event) => {
+    if (event.code === 'Space' || event.key === ' ') {
+        console.log("SPACE BAR")
         names = names.filter((name,index) => {
             let playerData = hashMap.get(name);
-            console.log(playerData ,playerData[1], APG)
             if (playerData && playerData[0] < PPG && playerData[1] < APG && playerData[2] < TRB){
                 widths.splice(index)
-                return false
+                return fale
             }
             return true
-        });
+        })
         console.log(names)
         addImages(names,width,heightMode="Max",40)
-        
-
-        document.getElementById(valueId).textContent = this.value;
-}
     
+    }});  
+    
+
 
 
 function addImages(fnames,fwidths,heightMode="Max",height=-1,max=70) {
@@ -131,8 +157,7 @@ function addImage(fname, fwidth,height )
 
 }
 
-var names = [""], widths = [""]
-var data
+
 function updateValues(json) {
     data = json
     names.length = json.length
@@ -149,10 +174,9 @@ function updateValues(json) {
             widths[index] = player.ratio
         }
 
-        
+        addImages(names,widths,"Max",40)
+
     })
-    addImages(names,widths,"Max",40)
-    imageReady = true
 }
 
 console.log(("Fetching"))
@@ -160,7 +184,7 @@ fetch('./players.json')
     .then((response) => response.json())
     .then((json) => {
         updateValues(json)
-        document.querySelectorAll('.slider').forEach(setSliders);
+        document.querySelectorAll('.textbox').forEach(setTextboxes);
     }).catch(error => console.error('Error:', error));
 
 
