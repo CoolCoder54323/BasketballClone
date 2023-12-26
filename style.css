@@ -69,6 +69,7 @@ body {
     position: relative;
     left: 40vh;
     transform: translate(0%);
+    align-items: end;
 
 
 }

@@ -2,7 +2,8 @@
 var PPG = 0
 var APG = 0
 var TRB = 0
-var imageReady = false
+var IMAGEMODE = "fading-right"
+
 
 let hashMap = new Map();
 const track = document.querySelector(".images");
@@ -62,7 +63,7 @@ document.addEventListener('keydown', (event) => {
         console.log(newNames)
         names = newNames
 
-        addImages(names,heightMode="Max",40)
+        addImages(names,heightMode=IMAGEMODE,40)
     
     }});  
 
@@ -98,6 +99,8 @@ function updateTextbox() {
 
 function addImages(fnames,heightMode="Max",height=-1,max=70) {
 
+    var images = document.querySelector(".images")
+
     console.log("Adding Images")
     track.innerHTML = ''; // Clear existing content
     if(heightMode==="Max") {
@@ -113,15 +116,20 @@ function addImages(fnames,heightMode="Max",height=-1,max=70) {
         }
     }
     else if(heightMode === "fading-right") {
+        scale = 0.97
+        images.style.left = "8%"
+        console.log("Mode Fading right")
+        console.log(images.classList)
+
         if(height === -1) {
             fnames.forEach((item,index)=> {
-                addImage(item,max*Math.pow(0.95,index))
+                addImage(item,max*Math.pow(scale,fnames.length - index))
                 
             }) 
         }
         else if(height > 0 ) {
             fnames.forEach((item,index)=> {
-                addImage(item,height*Math.pow(0.95,index))
+                addImage(item,height*Math.pow(scale,fnames.length - index))
             }) 
         }
     }
@@ -165,7 +173,7 @@ function updateDisplay(json) {
             names[index] = player.name
         }
 
-        addImages(names,"Max",40)
+        addImages(names,IMAGEMODE,40)
 
     })
 }
