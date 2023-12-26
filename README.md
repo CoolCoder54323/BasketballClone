@@ -1,7 +1,7 @@
 # NBA All Time At Least
 
 ## Introduction
-**NBA All Time At Least** is an interactive website designed for basketball enthusiasts. It allows users to explore NBA player statistics based on specific performance metrics like Points Per Game (PPG), Assists Per Game (APG), and Total Rebounds (TRB).
+**NBA All Time At Least** is an personal prject website designed for basketball heads. It allows users to explore NBA player statistics based on Points Per Game (PPG), Assists Per Game (APG), and Total Rebounds (TRB).
 
 ## Features
 - **Interactive Sliders:** Users can set minimum thresholds for PPG, APG, and TRB using sliders.
@@ -10,13 +10,17 @@
 
 ## Technologies Used
 - HTML/CSS/JavaScript
-- React.js
+- python
 - NBA Statistics API
-- Node.js for backend
 
 ## Getting Started
 To set up this project locally:
+
 1. Clone the repo:
+    ```
+        git clone https://github.com/CoolCoder54323/BasketballClone.git
+    ```
+
 
 2. Navigate to the project directory:
 
