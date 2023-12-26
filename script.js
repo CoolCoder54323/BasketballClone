@@ -37,14 +37,14 @@ window.onmousemove = e => {
             nextPercentage = Math.min(Math.max(parseFloat(track.dataset.pastPercent) + percentage,-100),100);
     track.dataset.percentage = nextPercentage
     track.animate({ transform: `translate(${nextPercentage}%)`},{duration:500, fill:"forwards"})
-    element.animate({backgroundPosition: `-${nextPercentage}%0%`},{duration:500, fill:"forwards"})
+    element.animate({backgroundPositionX: `${-(nextPercentage)*50 + 5000}vh`},{duration:500, fill:"forwards"})
 
 }
 
 document.addEventListener('keydown', (event) => {
     if (event.code === 'Space' || event.key === ' ') {
         console.log("SPACE BAR")
-        newNames = []
+        newNames = new Array()
 
         hashMap.forEach((playerData,name)=>{
 
@@ -59,15 +59,37 @@ document.addEventListener('keydown', (event) => {
                 }
             }
         })
+        removeList = names.filter((value,index)=>{
+            if(newNames.includes(value)){
+                return false
+            }
+            return true
+        })
+
+        console.log(removeList)
 
         console.log(newNames)
+
+        removeImages(removeList,500)
+
         names = newNames
 
-        addImages(names,heightMode=IMAGEMODE,40)
     
     }});  
 
 
+function removeImages(removeList,dur){
+    
+    multiplier = removeList.length
+
+    removeList.forEach((name,index)=>{
+        document.querySelector("." + name).animate({width: "0px"},{duration:dur})
+    })
+    setTimeout(()=>{addImages(names,heightMode=IMAGEMODE)}, dur)
+
+
+
+}
 
 //Helper functions
 function setTextboxes(textbox) {
@@ -105,12 +127,12 @@ function addImages(fnames,heightMode="Max",height=-1,max=70) {
     track.innerHTML = ''; // Clear existing content
     if(heightMode==="Max") {
         if(height === -1) {
-            fnames.forEach((item,index)=> {
+            fnames.forEach((item)=> {
                 addImage(item,max)
             })
         }
         else if (height>0) {
-            fnames.forEach((item,index)=> {
+            fnames.forEach((item)=> {
                 addImage(item,height)
             })
         }
@@ -145,6 +167,7 @@ function addImage(fname,height) {
     // Optionally, set some properties on the new div
     newDiv.className = "image-div";
     dynamicImage.src = "PlayerImages/" + fname + ".png";
+    dynamicImage.classList.add(fname)
     dynamicImage.style.height = `${Math.round(height)}vh`;
     ratio = Math.round((height * fratio) * 10) / 10
     dynamicImage.style.width = `${ratio}vh`;

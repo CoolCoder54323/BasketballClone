@@ -1,5 +1,12 @@
 [
     {
+        "name": "Jordan_Poole",
+        "ratio": 0.3,
+        "ppg": 15.9,
+        "apg": 3.4,
+        "trb": 2.6
+    },
+    {
         "name": "Anthony_Edwards",
         "ratio": 0.5,
         "ppg": 22.2,
@@ -12,6 +19,13 @@
         "ppg": 27.2,
         "apg": 7.3,
         "trb": 7.5
+    },
+    {
+        "name": "Kevin_Durant",
+        "ratio": 0.5,
+        "ppg": 27.4,
+        "apg": 4.4,
+        "trb": 7.0
     },
     {
         "name": "Joel_Embiid",

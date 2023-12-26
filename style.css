@@ -52,6 +52,8 @@ body {
 }
 
 .content {
+    background-position-x: 5000px;
+    background-size: cover;
     padding-top: 150px;
     background-origin: border-box;
     background-size: auto;
@@ -59,17 +61,18 @@ body {
     flex-wrap: wrap;
     min-height: 500px;
     margin-bottom: auto;
-    background-image: url('backgroundImages/symbol-scatter-haikei.svg');
+    background-image: url('backgroundImages/stacked-peaks-haikei.svg');
 
 }
 
 .images {
-    min-height: 200px;
     display: flex;
     position: relative;
     left: 40vh;
     transform: translate(0%);
     align-items: end;
+
+    object-fit: fill;
 
 
 }
@@ -79,8 +82,12 @@ body {
 
 
 }
+.image-div img {
+    object-fit: cover;
+}
 
 .footer {
+
 }
 
 .slider-container {
