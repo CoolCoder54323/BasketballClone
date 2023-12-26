@@ -8,7 +8,7 @@ let hashMap = new Map();
 const track = document.querySelector(".images");
 var textBoxes = document.querySelectorAll("#myTextBox")
 
-var names = [""], ratios = [""]
+var names = [""]
 var data
 
 
@@ -43,16 +43,26 @@ window.onmousemove = e => {
 document.addEventListener('keydown', (event) => {
     if (event.code === 'Space' || event.key === ' ') {
         console.log("SPACE BAR")
-        names = names.filter((name,index) => {
-            let playerData = hashMap.get(name);
-            if (playerData && (playerData[0] < PPG || playerData[1] < APG || playerData[2] < TRB)){
-                ratios.splice(index)
-                return false
+        newNames = []
+
+        hashMap.forEach((playerData,name)=>{
+
+            console.log(name, playerData[0], PPG,playerData[1], APG)
+            if (playerData[0] >= PPG ){
+                console.log(name)
+                if(playerData[1] >= APG){
+                    console.log(name)
+                    if(playerData[2] >= TRB){
+                        newNames.push(name)    
+                    }   
+                }
             }
-            return true
         })
-        console.log(names)
-        addImages(names,ratios,heightMode="Max",40)
+
+        console.log(newNames)
+        names = newNames
+
+        addImages(names,heightMode="Max",40)
     
     }});  
 
@@ -67,49 +77,58 @@ function setTextboxes(textbox) {
 
 function updateTextbox() {
     let id = this.id.split('-')[0]
+
+    console.log(id)
     switch(id) {
         case 'ppg':
+            console.log("Updated ppg")
             PPG = this.value
+            break;
         case 'apg':
+            console.log("Updated apg")
             APG = this.value
+            break;
         case 'trb':
+            console.log("Updated trb")
             TRB = this.value
+            break;
     }
 }
 
 
-function addImages(fnames,fratios,heightMode="Max",height=-1,max=70) {
+function addImages(fnames,heightMode="Max",height=-1,max=70) {
 
     console.log("Adding Images")
     track.innerHTML = ''; // Clear existing content
     if(heightMode==="Max") {
         if(height === -1) {
             fnames.forEach((item,index)=> {
-                addImage(item,fratios[index],max)
+                addImage(item,max)
             })
         }
         else if (height>0) {
             fnames.forEach((item,index)=> {
-                addImage(item,fratios[index],height)
+                addImage(item,height)
             })
         }
     }
     else if(heightMode === "fading-right") {
         if(height === -1) {
             fnames.forEach((item,index)=> {
-                addImage(item,fratios[index],max*Math.pow(0.95,index))
+                addImage(item,max*Math.pow(0.95,index))
                 
             }) 
         }
         else if(height > 0 ) {
             fnames.forEach((item,index)=> {
-                addImage(item,fratios[index],height*Math.pow(0.95,index))
+                addImage(item,height*Math.pow(0.95,index))
             }) 
         }
     }
 }
 
-function addImage(fname, fratio,height ) {
+function addImage(fname,height) {
+    var fratio = hashMap.get(fname)[3]
     console.log(`Loading ${fname} at ${fratio}vh long and ${height}vh tall`)
 
     // Create a new div element
@@ -134,9 +153,7 @@ function addImage(fname, fratio,height ) {
 
 
 function updateDisplay(json) {
-    data = json
     names.length = json.length
-    ratios.length = json.length
     json.forEach((player,index)=>
     {
         if(hashMap.has(player.name)){
@@ -144,12 +161,11 @@ function updateDisplay(json) {
         }
         console.log(`APG: ${APG} ${player.name}s APG{player.apg}`)
         if(player.ppg >= PPG && player.apg >= APG && player.trb >= TRB){
-            hashMap.set(player.name , [player.ppg,player.apg,player.trb])
+            hashMap.set(player.name , [player.ppg,player.apg,player.trb,player.ratio])
             names[index] = player.name
-            ratios[index] = player.ratio
         }
 
-        addImages(names,ratios,"Max",40)
+        addImages(names,"Max",40)
 
     })
 }
@@ -160,6 +176,7 @@ console.log(("Fetching"))
 fetch('./players.json')
     .then((response) => response.json())
     .then((json) => {
+        data = json
         updateDisplay(json)
         document.querySelectorAll('.textbox').forEach(setTextboxes);
     }).catch(error => console.error('Error:', error));
