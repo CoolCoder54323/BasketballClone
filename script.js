@@ -2,16 +2,18 @@
 var PPG = 0
 var APG = 0
 var TRB = 0
-var IMAGEMODE = "fading-right"
+var IMAGEMODE = "Max"
 
-
+var backgroundImage = document.querySelector('.content');
 let hashMap = new Map();
 const track = document.querySelector(".images");
 var textBoxes = document.querySelectorAll("#myTextBox")
+var cd = document.querySelector('.content');
+var width = cd.style.backgroundPositionX
+
 
 var names = [""]
 var data
-
 
 
 //Set listeners
@@ -21,12 +23,22 @@ window.onmousedown = e => {
 }
 window.onmouseup = (mouse) => {
     track.dataset.mouseDownAt = "0"
+    console.log(`Date recent is equal to : ${track.dataset.percentage}`)
+    track.dataset.percentage = roundTo(track.dataset.percentage,-1)
+    console.log(`Date recent is equal to : ${track.dataset.percentage}`)
+    track.animate({backgroundPositionX: `${track.dataset.percentage}px`},
+                  {duration:500, fill:"forwards",    animationTimingFunction: "ease"})
+    backgroundImage.animate({backgroundPositionX: `${-(track.dataset.percentage) + width}px`},
+                    {duration:500, fill:"forwards"})
+
     track.dataset.pastPercent = track.dataset.percentage
+
+
 }
 
 // Scroll content based on mouse movement
 window.onmousemove = e => {
-    var element = document.querySelector('.content');
+
 
     // Check if mouse is down
     if(track.dataset.mouseDownAt==="0") return;
@@ -37,7 +49,7 @@ window.onmousemove = e => {
             nextPercentage = Math.min(Math.max(parseFloat(track.dataset.pastPercent) + percentage,-100),100);
     track.dataset.percentage = nextPercentage
     track.animate({ transform: `translate(${nextPercentage}%)`},{duration:500, fill:"forwards"})
-    element.animate({backgroundPositionX: `${-(nextPercentage)*50 + 5000}vh`},{duration:500, fill:"forwards"})
+    backgroundImage.animate({backgroundPositionX: `${-(nextPercentage)*50 + width}px`},{duration:500, fill:"forwards"})
 
 }
 
@@ -75,14 +87,20 @@ document.addEventListener('keydown', (event) => {
         names = newNames
 
     
-    }});  
+    }});
+    
+
+function roundTo(num, decimalPlaces) {
+    var multiplier = Math.pow(10, decimalPlaces);
+    return Math.round(num * multiplier) / multiplier;
+}
 
 
 function removeImages(removeList,dur){
     
     multiplier = removeList.length
 
-    removeList.forEach((name,index)=>{
+    removeList.forEach((name)=>{
         document.querySelector("." + name).animate({width: "0px"},{duration:dur})
     })
     setTimeout(()=>{addImages(names,heightMode=IMAGEMODE)}, dur)
@@ -100,6 +118,8 @@ function setTextboxes(textbox) {
 
 function updateTextbox() {
     let id = this.id.split('-')[0]
+    var value = this.value;
+    this.value = value.replace(/[^0-9]/g, '');
 
     console.log(id)
     switch(id) {
