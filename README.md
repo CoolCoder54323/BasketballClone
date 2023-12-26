@@ -15,20 +15,15 @@
 
 ## Getting Started
 To set up this project locally:
+1. This project requires 
 
-1. Clone the repo:
+1. Clone the repo & Navigate to the project directory::
     ```
         git clone https://github.com/CoolCoder54323/BasketballClone.git
+        cd BasketballClone
     ```
 
-
-2. Navigate to the project directory:
-
-3. Install dependencies:
-
-4. Start the server:
-
-5. Open `localhost:3000` in your browser.
+3. Start the server
 
 ## Usage
 Adjust the PPG, APG, and TRB sliders to see a list of NBA players who have achieved these stats in a season.
