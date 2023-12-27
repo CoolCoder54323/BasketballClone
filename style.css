@@ -85,13 +85,14 @@ body {
 .images {
     display: flex;
     position: relative;
-    transform: translate(0%);
+    transform: translate(calc(0% - 0px));
     align-items: end;
     object-fit: fill;
 }
 
 .image-div {
-    margin: 10px;
+    width: 200px;
+    margin: 0;
 }
 
 .image-div img {

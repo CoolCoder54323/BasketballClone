@@ -4,6 +4,8 @@ var APG = 0
 var TRB = 0
 var IMAGEMODE = "Max"
 
+let largestImage = ["",0]
+
 var backgroundImage = document.querySelector('.content');
 let hashMap = new Map();
 const track = document.querySelector(".images");
@@ -57,14 +59,8 @@ document.addEventListener('keydown', (event) => {
         hashMap.forEach((playerData,name)=>{
 
             console.log(name, playerData[0], PPG,playerData[1], APG)
-            if (playerData[0] >= PPG ){
-                console.log(name)
-                if(playerData[1] >= APG){
-                    console.log(name)
-                    if(playerData[2] >= TRB){
-                        newNames.push(name)    
-                    }   
-                }
+            if (playerData[0] >= PPG && playerData[1] >= APG && playerData[2] >= TRB){
+                 newNames.push(name)     
             }
         })
         removeList = names.filter((value,index)=>{
@@ -101,7 +97,7 @@ function removeImages(removeList,dur){
     })
     setTimeout(()=>{addImages(names,heightMode=IMAGEMODE)}, dur)
 
-
+    
 
 }
 
@@ -191,10 +187,36 @@ function addImages(fnames,heightMode="Max",height=-1,max=70) {
             }) 
         }
     }
+    console.log("hello",images)
+
+    console.log(Array.prototype.slice.call(images.children).filter((element)=>{
+        element = Array.prototype.slice.call(element.children)[0]
+        console.log("this.name:" + (element.classList[0],largestImage[0] === "" || !element.classList[0] ? "-----" :element.classList[0]) + ",",largestImage[0],"===",element.classList[0] === largestImage[0])
+
+        if(element.classList[0] === largestImage[0]){
+            return true
+        }
+    }))
+
+    let [img] = Array.prototype.slice.call(images.children).filter((element)=>{
+        element = Array.prototype.slice.call(element.children)[0]
+        if(element.classList[0] === largestImage[0]){
+            return true
+        }
+    })
+    console.log(img)
+
+    img = Array.prototype.slice.call(img.children)[0]
+    console.log("HELLO",img.name)
+
+    let local_width = img.parentElement.style.width
+    addStylesheetRule(`.image-div { width : ${local_width}px"`)
 }
 
 function addImage(fname,height) {
     var fratio = hashMap.get(fname)[3]
+
+    largestImage = fratio > largestImage[1] ? [fname,fratio] : largestImage
     console.log(`Loading ${fname} at ${fratio}vh long and ${height}vh tall`)
 
     // Create a new div element
@@ -230,6 +252,7 @@ function updateDisplay(json) {
         if(player.ppg >= PPG && player.apg >= APG && player.trb >= TRB){
             hashMap.set(player.name , [player.ppg,player.apg,player.trb,player.ratio])
             names[index] = player.name
+            console.log(names)
         }
 
         addImages(names,IMAGEMODE,40)
