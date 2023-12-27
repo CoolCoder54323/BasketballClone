@@ -26,10 +26,10 @@
     height: 100vh;
 }
 .section {
+
     width: 100%;
-    background-color: #121212;
     /*border: 3px solid #333; */
-    color: white;
+    color: rgba(255, 255, 255,0.5);
 }
 body {
     overflow-x: hidden;
@@ -46,6 +46,7 @@ body {
 }
 
 .header {
+    color: rgba(154, 49, 49,0.5);  
     background-color: black;
     min-height: 100px;
     display: flex;
@@ -109,7 +110,7 @@ body {
 
 }
 
-.slider-container {
+.textbox-container {
     display: flex;
     flex-direction: column;
     margin: 20px;
@@ -117,17 +118,16 @@ body {
 
 }
 
-.sliders {
-    margin-top: 20px;
-}
 
-.slider-label {
+
+.textbox-value-label {
     font-weight: 100;
     margin-bottom: 5px;
     text-align: center;
 }
 
-.sliders {
+.textboxes {
+    margin-top: 20px;
     display: flex;
     justify-content: center;
     width: 100%;
@@ -136,22 +136,52 @@ body {
 }
 
 .textbox {
+    display: flex;
+    
     background-color: transparent; /* Makes the background transparent */
     border: 0px solid grey; /* Adds a border to the input */
-    color: aliceblue;
     text-align: center;
     font-size: 50px;
     width: 2em;
     user-select: none; /* Prevents text inside the textbox from being selected */
-    caret-color: transparent;
+    caret-color: black;
     transition: color 0.3s ease, font-size 0.3s ease;
+    outline: none;
+    color: #ffffff;
+    
 }
-
-.textbox:hover {
+.input-with-placeholder {
+    width: fit-content;
+    position: relative;
+  }
+.textbox-placeholder-label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    padding-left: 35%;
     font-size: 54px; /* Initial font size */
-    color: aliceblue;
-
+    transition: 300ms all;
+    color: rgba(154, 49, 49,0.5);  
 }
+
+  .textbox:focus + .textbox-placeholder-label,
+  .input-with-placeholder input:valid + label {
+    color: rgba(154, 49, 49,0);  
+    height: 50%;
+    padding-left: 0;
+    transform: translateY(-100%);
+    font-size: 12px;
+  }
+
+
+
+
+
 
 
 

@@ -23,9 +23,7 @@ window.onmousedown = e => {
 }
 window.onmouseup = (mouse) => {
     track.dataset.mouseDownAt = "0"
-    console.log(`Date recent is equal to : ${track.dataset.percentage}`)
     track.dataset.percentage = roundTo(track.dataset.percentage,-1)
-    console.log(`Date recent is equal to : ${track.dataset.percentage}`)
     track.animate({backgroundPositionX: `${track.dataset.percentage}px`},
                   {duration:500, fill:"forwards",    animationTimingFunction: "ease"})
     backgroundImage.animate({backgroundPositionX: `${-(track.dataset.percentage) + width}px`},
@@ -107,11 +105,31 @@ function removeImages(removeList,dur){
 
 }
 
+function addStylesheetRule(rule) {
+    var styleEl = document.createElement('style');
+    // Append <style> element to <head>
+    document.head.appendChild(styleEl);
+
+    // Grab style sheet
+    var styleSheet = styleEl.sheet;
+    styleSheet.insertRule(rule);
+}
+
 //Helper functions
 function setTextboxes(textbox) {
+    var id = textbox.id
     textbox.value = ""
     textbox.oninput = updateTextbox
+    textbox.onclick = ()=>{
+        console.log("HELLO",textbox.valu,id)
+
+        // if(textbox.value === ""){
+        //     animateColor()
+        //     addStylesheetRule(`#${id}.textbox::placeholder { color: white; }`);
+        // }
+    }
     textbox.oninput();
+
 }
 
 function updateTextbox() {
