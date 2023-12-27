@@ -71,7 +71,7 @@ body {
 .content {
     background-position-x: 0px;
     background-size: cover;
-    padding-top: 150px;
+    padding-top:50px;
     background-origin: border-box;
     background-size: auto;
     display: flex;
@@ -88,10 +88,10 @@ body {
     transform: translate(calc(0% - 0px));
     align-items: end;
     object-fit: fill;
+    border: 2px dashed red;
 }
 
 .image-div {
-    width: 200px;
     margin: 0;
 }
 
@@ -112,6 +112,23 @@ body {
 .footer {
 
 }
+
+/* .images-grid {
+    display: grid;
+    width: 100%;
+    grid-template-rows: 1px;
+    height: 20px;
+    justify-content: center;
+    transform: translateX(-90px); 
+}
+
+.images-grid div {
+    border-width: 3px;
+    border-color: antiquewhite;
+    text-align:center;
+    width: 100%;
+    height: 100%;
+} */
 
 .textbox-container {
     display: flex;
@@ -150,7 +167,7 @@ body {
     caret-color: black;
     transition: color 0.3s ease, font-size 0.3s ease;
     outline: none;
-    color: #ffffff;
+    color: rgba(255, 255, 255, 0.5);
     
 }
 .input-with-placeholder {

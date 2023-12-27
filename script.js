@@ -4,6 +4,10 @@ var APG = 0
 var TRB = 0
 var IMAGEMODE = "Max"
 
+const MAX = 378
+
+// imageGrid = document.querySelector(".images-grid");
+
 let largestImage = ["",0]
 
 var backgroundImage = document.querySelector('.content');
@@ -26,10 +30,11 @@ window.onmousedown = e => {
 window.onmouseup = (mouse) => {
     track.dataset.mouseDownAt = "0"
     track.dataset.percentage = roundTo(track.dataset.percentage,-1)
-    track.animate({backgroundPositionX: `${track.dataset.percentage}px`},
+    track.animate({backgroundPositionX: `${track.dataset.percentage}%`},
                   {duration:500, fill:"forwards",    animationTimingFunction: "ease"})
     backgroundImage.animate({backgroundPositionX: `${-(track.dataset.percentage) + width}px`},
                     {duration:500, fill:"forwards"})
+    
 
     track.dataset.pastPercent = track.dataset.percentage
 }
@@ -44,12 +49,14 @@ window.onmousemove = e => {
           maxDelta = window.innerWidth / 2;
 
     const percentage = (mouseDelta/maxDelta) * -100,
-            nextPercentage = Math.min(Math.max(parseFloat(track.dataset.pastPercent) + percentage,-100),100);
+            nextPercentage = Math.min(Math.max(parseFloat(track.dataset.pastPercent) + percentage,-50),-25);
     track.dataset.percentage = nextPercentage
-    track.animate({ transform: `translate(${nextPercentage}%)`},{duration:500, fill:"forwards"})
+    track.animate({ transform: `translate(${(nextPercentage/100)*track.clientWidth}px)`},{duration:500, fill:"forwards"})
     backgroundImage.animate({backgroundPositionX: `${-(nextPercentage)*50 + width}px`},{duration:500, fill:"forwards"})
 
 }
+
+
 
 document.addEventListener('keydown', (event) => {
     if (event.code === 'Space' || event.key === ' ') {
@@ -86,6 +93,15 @@ function roundTo(num, decimalPlaces) {
     var multiplier = Math.pow(10, decimalPlaces);
     return Math.round(num * multiplier) / multiplier;
 }
+
+function center() {
+    //let x  = -track.clientWidth * track.dataset.percentage,
+    let middle = window.innerWidth/2 - track.clientWidth
+    
+
+
+}
+
 
 
 function removeImages(removeList,dur){
@@ -151,7 +167,7 @@ function updateTextbox() {
 }
 
 
-function addImages(fnames,heightMode="Max",height=-1,max=70) {
+function addImages(fnames,heightMode="Max",height=-1,max=MAX) {
 
     var images = document.querySelector(".images")
 
@@ -187,30 +203,27 @@ function addImages(fnames,heightMode="Max",height=-1,max=70) {
             }) 
         }
     }
-    console.log("hello",images)
 
-    console.log(Array.prototype.slice.call(images.children).filter((element)=>{
-        element = Array.prototype.slice.call(element.children)[0]
-        console.log("this.name:" + (element.classList[0],largestImage[0] === "" || !element.classList[0] ? "-----" :element.classList[0]) + ",",largestImage[0],"===",element.classList[0] === largestImage[0])
+    // setGrid()
+    let [local_width, imgArr] = getWidth()
+    imgArr.forEach((elem,idx)=>{
+        elem.style.width = local_width
+    })
+}
 
-        if(element.classList[0] === largestImage[0]){
-            return true
-        }
-    }))
+const getWidth = ()=> { 
+    let imgArr =  Array.prototype.slice.call(document.querySelector(".images").children)
 
-    let [img] = Array.prototype.slice.call(images.children).filter((element)=>{
+    let [img] = imgArr.filter((element)=>{
         element = Array.prototype.slice.call(element.children)[0]
         if(element.classList[0] === largestImage[0]){
             return true
         }
     })
-    console.log(img)
 
     img = Array.prototype.slice.call(img.children)[0]
-    console.log("HELLO",img.name)
 
-    let local_width = img.parentElement.style.width
-    addStylesheetRule(`.image-div { width : ${local_width}px"`)
+    return [img.style.width,imgArr]
 }
 
 function addImage(fname,height) {
@@ -226,9 +239,9 @@ function addImage(fname,height) {
     newDiv.className = "image-div";
     dynamicImage.src = "PlayerImages/" + fname + ".png";
     dynamicImage.classList.add(fname)
-    dynamicImage.style.height = `${Math.round(height)}vh`;
+    dynamicImage.style.height = `${Math.round(height)}px`;
     width = Math.round((height * fratio) * 10) / 10
-    dynamicImage.style.width = `${width}vh`;
+    dynamicImage.style.width = `${width}px`;
     dynamicImage.setAttribute("draggable","false")
 
     var targetElement = document.querySelector(".images");
@@ -240,6 +253,29 @@ function addImage(fname,height) {
 
 }
 
+// function setGrid() {
+//     imageGrid.innerHTML = ""
+
+
+//     console.log("SETTING GRID")
+
+//     let maxWidth = document.querySelector(`.${largestImage[0]}`).clientWidth
+
+//     let tempCol = ""
+
+//     console.log(maxWidth)
+    
+//     for(let i = 0; i < names.length;i++){
+//         tempCol += `${maxWidth}px`
+//         if(i < Math.floor(imageGrid.clientWidth/maxWidth)-1) tempCol += " ";
+//         imageGrid.innerHTML += `<div>${i+1}</div>`
+//     }
+//     console.log(tempCol)
+
+//     imageGrid.style.gridTemplateColumns = tempCol
+
+
+// }
 
 function updateDisplay(json) {
     names.length = json.length
@@ -254,10 +290,9 @@ function updateDisplay(json) {
             names[index] = player.name
             console.log(names)
         }
-
-        addImages(names,IMAGEMODE,40)
-
     })
+    addImages(names,IMAGEMODE)
+
 }
 
 
@@ -268,8 +303,14 @@ fetch('./players.json')
     .then((json) => {
         data = json
         updateDisplay(json)
+        console.log(15676523456,Number(getWidth()[0].split('v')[0]))
+        track.animate({ transform: `translate(${window.innerWidth/2 - track.clientWidth + 1*Number(getWidth()[0].split('p')[0])/2}px)`},{duration:500, fill:"forwards"})
+
         document.querySelectorAll('.textbox').forEach(setTextboxes);
     }).catch(error => console.error('Error:', error));
+
+
+
 
 
 
