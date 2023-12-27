@@ -1,7 +1,7 @@
 # NBA All Time At Least
 
 ## Introduction
-**NBA All Time At Least** is an personal prject website designed for basketball heads. It allows users to explore NBA player statistics based on Points Per Game (PPG), Assists Per Game (APG), and Total Rebounds (TRB).
+**NBA All Time At Least** is an personal project website designed for basketball heads. It allows users to explore NBA player statistics based on Points Per Game (PPG), Assists Per Game (APG), and Total Rebounds (TRB).
 
 ## Features
 - **Interactive Sliders:** Users can set minimum thresholds for PPG, APG, and TRB using sliders.
