@@ -88,7 +88,6 @@ body {
     transform: translate(calc(0% - 0px));
     align-items: end;
     object-fit: fill;
-    border: 2px dashed red;
 }
 
 .image-div {

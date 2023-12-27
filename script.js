@@ -32,8 +32,8 @@ window.onmouseup = (mouse) => {
     track.dataset.percentage = roundTo(track.dataset.percentage,-1)
     track.animate({backgroundPositionX: `${track.dataset.percentage}%`},
                   {duration:500, fill:"forwards",    animationTimingFunction: "ease"})
-    backgroundImage.animate({backgroundPositionX: `${-(track.dataset.percentage) + width}px`},
-                    {duration:500, fill:"forwards"})
+    // backgroundImage.animate({backgroundPositionX: `${-(track.dataset.percentage) + width}px`},
+    //                 {duration:500, fill:"forwards"})
     
 
     track.dataset.pastPercent = track.dataset.percentage
@@ -47,12 +47,12 @@ window.onmousemove = e => {
     if(track.dataset.mouseDownAt==="0") return;
     const mouseDelta = parseFloat(track.dataset.mouseDownAt) - e.clientX,
           maxDelta = window.innerWidth / 2;
-
+    let offset = window.innerWidth/2 - track.clientWidth + 1*Number(getWidth()[0].split('p')[0])/2
     const percentage = (mouseDelta/maxDelta) * -100,
-            nextPercentage = Math.min(Math.max(parseFloat(track.dataset.pastPercent) + percentage,-50),-25);
+            nextPercentage = Math.min(Math.max(parseFloat(track.dataset.pastPercent) + percentage,0),100);
     track.dataset.percentage = nextPercentage
-    track.animate({ transform: `translate(${(nextPercentage/100)*track.clientWidth}px)`},{duration:500, fill:"forwards"})
-    backgroundImage.animate({backgroundPositionX: `${-(nextPercentage)*50 + width}px`},{duration:500, fill:"forwards"})
+    track.animate({ transform: `translate(${(nextPercentage/100)*track.clientWidth+offset }px)`},{duration:500, fill:"forwards"})
+    // backgroundImage.animate({backgroundPositionX: `${-(nextPercentage)*50 + width}px`},{duration:500, fill:"forwards"})
 
 }
 
