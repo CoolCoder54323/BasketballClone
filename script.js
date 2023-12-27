@@ -32,8 +32,6 @@ window.onmouseup = (mouse) => {
                     {duration:500, fill:"forwards"})
 
     track.dataset.pastPercent = track.dataset.percentage
-
-
 }
 
 // Scroll content based on mouse movement
@@ -189,8 +187,8 @@ function addImage(fname,height) {
     dynamicImage.src = "PlayerImages/" + fname + ".png";
     dynamicImage.classList.add(fname)
     dynamicImage.style.height = `${Math.round(height)}vh`;
-    ratio = Math.round((height * fratio) * 10) / 10
-    dynamicImage.style.width = `${ratio}vh`;
+    width = Math.round((height * fratio) * 10) / 10
+    dynamicImage.style.width = `${width}vh`;
     dynamicImage.setAttribute("draggable","false")
 
     var targetElement = document.querySelector(".images");

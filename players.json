@@ -1,42 +1,42 @@
 [
     {
         "name": "Jordan_Poole",
-        "ratio": 0.3,
+        "ratio": 0.335,
         "ppg": 15.9,
         "apg": 3.4,
         "trb": 2.6
     },
     {
         "name": "Anthony_Edwards",
-        "ratio": 0.5,
+        "ratio": 0.475,
         "ppg": 22.2,
         "apg": 3.9,
         "trb": 5.1
     },
     {
         "name": "Lebron_James",
-        "ratio": 0.4,
+        "ratio": 0.39,
         "ppg": 27.2,
         "apg": 7.3,
         "trb": 7.5
     },
     {
         "name": "Kevin_Durant",
-        "ratio": 0.5,
+        "ratio": 0.523,
         "ppg": 27.4,
         "apg": 4.4,
         "trb": 7.0
     },
     {
         "name": "Joel_Embiid",
-        "ratio": 0.4,
+        "ratio": 0.414,
         "ppg": 27.7,
         "apg": 3.6,
         "trb": 11.2
     },
     {
         "name": "Micheal_Jordan",
-        "ratio": 0.5,
+        "ratio": 0.35,
         "ppg": 30.1,
         "apg": 5.3,
         "trb": 6.2

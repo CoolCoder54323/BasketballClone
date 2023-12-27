@@ -1,5 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100;0,400;1,100&display=swap');
 
+.wave {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+}
+
+.wave svg {
+    position: relative;
+    display: block;
+    width: calc(100% + 1.3px);
+    height: 32px;
+}
+
+.wave .shape-fill {
+    fill: #000000;
+}
 
 .flexbox-container {
     display: flex;
@@ -32,18 +51,15 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 10px;
-
-
-    
 }
 
 .description {
+    padding-top: 30px;
+    position: relative;
     min-height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
-
 }
 
 .description h2 {
@@ -70,18 +86,13 @@ body {
     position: relative;
     transform: translate(0%);
     align-items: end;
-
     object-fit: fill;
-
-
 }
-
 
 .image-div {
     margin: 10px;
-
-
 }
+
 .image-div img {
     object-fit: cover;
     opacity: 0.5;
