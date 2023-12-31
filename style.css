@@ -88,10 +88,15 @@ body {
     transform: translate(calc(0% - 0px));
     align-items: end;
     object-fit: fill;
+    /* border: 2px dashed red; */
 }
 
 .image-div {
     margin: 0;
+    display: flex;
+    justify-content: center;
+    /* border: 1px dashed blue; */
+
 }
 
 .image-div img {
@@ -163,7 +168,7 @@ body {
     font-size: 50px;
     width: 2em;
     user-select: none; /* Prevents text inside the textbox from being selected */
-    caret-color: black;
+    caret-color: rgba(154, 49, 49,0.5);
     transition: color 0.3s ease, font-size 0.3s ease;
     outline: none;
     color: rgba(255, 255, 255, 0.5);

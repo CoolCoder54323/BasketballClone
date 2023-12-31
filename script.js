@@ -5,6 +5,8 @@ var TRB = 0
 var IMAGEMODE = "Max"
 
 const MAX = 378
+let offset;
+let nextPercentage;
 
 // imageGrid = document.querySelector(".images-grid");
 
@@ -29,14 +31,31 @@ window.onmousedown = e => {
 }
 window.onmouseup = (mouse) => {
     track.dataset.mouseDownAt = "0"
-    track.dataset.percentage = roundTo(track.dataset.percentage,-1)
-    track.animate({backgroundPositionX: `${track.dataset.percentage}%`},
-                  {duration:500, fill:"forwards",    animationTimingFunction: "ease"})
+    // track.animate({backgroundPositionX: `${track.dataset.percentage}%`},
+    //               {duration:500, fill:"forwards",    animationTimingFunction: "ease"})
     // backgroundImage.animate({backgroundPositionX: `${-(track.dataset.percentage) + width}px`},
     //                 {duration:500, fill:"forwards"})
-    
 
-    track.dataset.pastPercent = track.dataset.percentage
+    console.log("Parse float:",track.style.transform, "=",parseFloat(track.style.transform.split("(")[1])+offset )
+
+    currX = 0;
+    newX =0;
+
+    if(parseFloat(track.style.transform.split("(")[1])){
+        currX = parseFloat(track.style.transform.split("(")[1])
+        newX = closestNumber(currX-offset,getWidth()[0]);
+    }
+    console.log("Closest number test", closestNumber(-67.2,5.4))
+    
+    
+    console.log("transform:",track.style.transform,currX,getWidth()[0],closestNumber(currX-offset,getWidth()[0]))
+
+    
+    console.log(offset,newX,((newX-offset)/track.clientWidth)*100)
+
+    track.animate({ transform: `translate(${newX + offset}px)`},{duration:500, fill:"forwards"})
+    track.dataset.percentage = track.dataset.pastPercent = ((((newX)/track.clientWidth)*100))
+
 }
 
 // Scroll content based on mouse movement
@@ -45,13 +64,12 @@ window.onmousemove = e => {
 
     // Check if mouse is down
     if(track.dataset.mouseDownAt==="0") return;
+    console.log("MOVING")
+
     const mouseDelta = parseFloat(track.dataset.mouseDownAt) - e.clientX,
           maxDelta = window.innerWidth / 2;
-    let offset = window.innerWidth/2 - track.clientWidth + 1*Number(getWidth()[0].split('p')[0])/2
-    const percentage = (mouseDelta/maxDelta) * -100,
-            nextPercentage = Math.min(Math.max(parseFloat(track.dataset.pastPercent) + percentage,0),100);
-    track.dataset.percentage = nextPercentage
-    track.animate({ transform: `translate(${(nextPercentage/100)*track.clientWidth+offset }px)`},{duration:500, fill:"forwards"})
+    const percentage = (mouseDelta/maxDelta) * -100
+    moveImage(percentage)
     // backgroundImage.animate({backgroundPositionX: `${-(nextPercentage)*50 + width}px`},{duration:500, fill:"forwards"})
 
 }
@@ -59,6 +77,7 @@ window.onmousemove = e => {
 
 
 document.addEventListener('keydown', (event) => {
+    console.log(event.code)
     if (event.code === 'Space' || event.key === ' ') {
         console.log("SPACE BAR")
         newNames = new Array()
@@ -85,10 +104,60 @@ document.addEventListener('keydown', (event) => {
 
         names = newNames
 
-    
-    }});
-    
+    }
+    if(event.code === 'KeyT'){
+        imgs = document.querySelectorAll(".image-div")
+        console.log(imgs)
+        imgs.forEach((img)=>{
+            console.log("img",img.style.justifyContent)
+            if(img.style.justifyContent === "flex-start"){
+                img.style.justifyContent = "center"
+            }
+            else if(img.style.justifyContent === "center"){
+                img.style.justifyContent = "flex-start"
+            }
+            else {
+                img.style.justifyContent = "center"
+            }
+            
+        })
+    }
 
+});
+
+function moveImage(percentage) {
+    offset = window.innerWidth/2 - track.clientWidth + getMiddle()
+
+    nextPercentage = Math.min(Math.max(parseFloat(track.dataset.pastPercent) + percentage,0),90);
+    track.dataset.percentage = nextPercentage
+    track.animate({ transform: `translate(${(nextPercentage/100)*track.clientWidth+offset}px)`},{duration:percentage !== 0 ? 500 : 0, fill:"forwards"})
+    track.style.transform = `translate(${(nextPercentage/100)*track.clientWidth+offset}px)`
+    console.log("On mouse Move",track.style.transform)
+}
+    
+function closestNumber(n, m)
+{
+ 
+    // find the quotient
+    let q = parseInt(n / m);
+     
+    // 1st possible closest number
+    let n1 = m * q;
+     
+    // 2nd possible closest number
+    let n2 = (n * m) > 0 ?
+        (m * (q + 1)) : (m * (q - 1));
+     
+    // if true, then n1 is the
+    // required closest number
+    if (Math.abs(n - n1) < Math.abs(n - n2))
+        return n1;
+     
+    // else n2 is the required
+    // closest number
+    return n2;
+}
+ 
 function roundTo(num, decimalPlaces) {
     var multiplier = Math.pow(10, decimalPlaces);
     return Math.round(num * multiplier) / multiplier;
@@ -207,7 +276,7 @@ function addImages(fnames,heightMode="Max",height=-1,max=MAX) {
     // setGrid()
     let [local_width, imgArr] = getWidth()
     imgArr.forEach((elem,idx)=>{
-        elem.style.width = local_width
+        elem.style.width = local_width + "px"
     })
 }
 
@@ -223,7 +292,7 @@ const getWidth = ()=> {
 
     img = Array.prototype.slice.call(img.children)[0]
 
-    return [img.style.width,imgArr]
+    return [parseFloat(img.style.width.split('p')[0]),imgArr]
 }
 
 function addImage(fname,height) {
@@ -295,6 +364,9 @@ function updateDisplay(json) {
 
 }
 
+function getMiddle() {
+    return Number(getWidth()[0])/2
+}
 
 
 console.log(("Fetching"))
@@ -303,9 +375,12 @@ fetch('./players.json')
     .then((json) => {
         data = json
         updateDisplay(json)
-        console.log(15676523456,Number(getWidth()[0].split('v')[0]))
-        track.animate({ transform: `translate(${window.innerWidth/2 - track.clientWidth + 1*Number(getWidth()[0].split('p')[0])/2}px)`},{duration:500, fill:"forwards"})
-
+        offset = window.innerWidth/2 - track.clientWidth + getMiddle();
+        console.log("Get width",(getWidth()[0]))
+        track.animate({ transform: `translate(${window.innerWidth/2 - track.clientWidth + getMiddle()}px)`},{duration:500, fill:"forwards"})
+        console.log("HEHLRLHRL")
+        console.log("Next Percentage",nextPercentage ? nextPercentage : 0)
+        track.style.transform = `translate(${track.clientWidth + (offset)})px)`
         document.querySelectorAll('.textbox').forEach(setTextboxes);
     }).catch(error => console.error('Error:', error));
 
