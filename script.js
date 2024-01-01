@@ -7,10 +7,12 @@ var IMAGEMODE = "Max"
 const MAX = 378
 let offset;
 let nextPercentage;
+let mouseSelected = false
 
 // imageGrid = document.querySelector(".images-grid");
 
 let largestImage = ["",0]
+let highlightedPLayerDiv;
 
 var backgroundImage = document.querySelector('.content');
 let hashMap = new Map();
@@ -27,7 +29,7 @@ var data
 //Set listeners
 window.onmousedown = e => {
    track.dataset.mouseDownAt = e.clientX;
-   console.log("Hii" + track.dataset.mouseDownAt)
+   console.log("Press at:" + track.dataset.mouseDownAt)
 }
 window.onmouseup = (mouse) => {
     track.dataset.mouseDownAt = "0"
@@ -35,9 +37,6 @@ window.onmouseup = (mouse) => {
     //               {duration:500, fill:"forwards",    animationTimingFunction: "ease"})
     // backgroundImage.animate({backgroundPositionX: `${-(track.dataset.percentage) + width}px`},
     //                 {duration:500, fill:"forwards"})
-
-    console.log("Parse float:",track.style.transform, "=",parseFloat(track.style.transform.split("(")[1])+offset )
-
     currX = 0;
     newX =0;
 
@@ -45,31 +44,25 @@ window.onmouseup = (mouse) => {
         currX = parseFloat(track.style.transform.split("(")[1])
         newX = closestNumber(currX-offset,getWidth()[0]);
     }
-    console.log("Closest number test", closestNumber(-67.2,5.4))
     
-    
-    console.log("transform:",track.style.transform,currX,getWidth()[0],closestNumber(currX-offset,getWidth()[0]))
-
-    
-    console.log(offset,newX,((newX-offset)/track.clientWidth)*100)
-
     track.animate({ transform: `translate(${newX + offset}px)`},{duration:500, fill:"forwards"})
     track.dataset.percentage = track.dataset.pastPercent = ((((newX)/track.clientWidth)*100))
+    highlightPlayer()
 
 }
 
 // Scroll content based on mouse movement
 window.onmousemove = e => {
 
-
     // Check if mouse is down
     if(track.dataset.mouseDownAt==="0") return;
-    console.log("MOVING")
 
     const mouseDelta = parseFloat(track.dataset.mouseDownAt) - e.clientX,
           maxDelta = window.innerWidth / 2;
     const percentage = (mouseDelta/maxDelta) * -100
     moveImage(percentage)
+    highlightPlayer()
+
     // backgroundImage.animate({backgroundPositionX: `${-(nextPercentage)*50 + width}px`},{duration:500, fill:"forwards"})
 
 }
@@ -157,6 +150,19 @@ function closestNumber(n, m)
     // closest number
     return n2;
 }
+
+function highlightPlayer() {
+    let pos = track.clientWidth * track.dataset.percentage/100,
+    playersMoved =  Math.round(pos/getWidth()[0])
+    console.log(`Highlighting the",${playersMoved} player`)
+    if(highlightedPLayerDiv == track.childNodes[track.childNodes.length-playersMoved-1]) return;
+
+    if(highlightedPLayerDiv) highlightedPLayerDiv.childNodes[0].classList.remove("selected-image-div");
+    highlightedPLayerDiv = track.childNodes[track.childNodes.length-playersMoved-1]
+    highlightedPLayerDiv.childNodes[0].classList.add("selected-image-div")
+    
+
+}
  
 function roundTo(num, decimalPlaces) {
     var multiplier = Math.pow(10, decimalPlaces);
@@ -164,25 +170,18 @@ function roundTo(num, decimalPlaces) {
 }
 
 function center() {
-    //let x  = -track.clientWidth * track.dataset.percentage,
     let middle = window.innerWidth/2 - track.clientWidth
-    
-
-
 }
-
-
 
 function removeImages(removeList,dur){
     
     multiplier = removeList.length
 
     removeList.forEach((name)=>{
-        document.querySelector("." + name).animate({width: "0px"},{duration:dur})
+        let imageDiv = document.querySelector("." + name)
+        imageDiv.animate({width: "0px"},{duration:dur})
     })
     setTimeout(()=>{addImages(names,heightMode=IMAGEMODE)}, dur)
-
-    
 
 }
 
@@ -210,7 +209,6 @@ function setTextboxes(textbox) {
         // }
     }
     textbox.oninput();
-
 }
 
 function updateTextbox() {
@@ -234,7 +232,6 @@ function updateTextbox() {
             break;
     }
 }
-
 
 function addImages(fnames,heightMode="Max",height=-1,max=MAX) {
 
@@ -281,7 +278,8 @@ function addImages(fnames,heightMode="Max",height=-1,max=MAX) {
 }
 
 const getWidth = ()=> { 
-    let imgArr =  Array.prototype.slice.call(document.querySelector(".images").children)
+    let imgArr = Array.from(document.querySelector(".images"))
+    console.log(imgArr)
 
     let [img] = imgArr.filter((element)=>{
         element = Array.prototype.slice.call(element.children)[0]
@@ -290,7 +288,7 @@ const getWidth = ()=> {
         }
     })
 
-    img = Array.prototype.slice.call(img.children)[0]
+    img = img.querySelector("*")
 
     return [parseFloat(img.style.width.split('p')[0]),imgArr]
 }
@@ -300,6 +298,7 @@ function addImage(fname,height) {
 
     largestImage = fratio > largestImage[1] ? [fname,fratio] : largestImage
     console.log(`Loading ${fname} at ${fratio}vh long and ${height}vh tall`)
+    
 
     // Create a new div element
     var newDiv = document.createElement("div");
@@ -315,10 +314,22 @@ function addImage(fname,height) {
 
     var targetElement = document.querySelector(".images");
 
+    newDiv.addEventListener('mouseover',function(){
+        if(track.dataset.mouseDownAt !== "0") return;
+        mouseSelected = true;
+        this.childNodes[0].classList.add("highlighted-image-div")
+    })
+    newDiv.addEventListener("mouseleave",function(){
+        if(track.dataset.mouseDownAt !== "0") return;
+        mouseSelected = false;
+        this.childNodes[0].classList.remove("highlighted-image-div")
+    })
+
     newDiv.appendChild(dynamicImage);
 
     // Append the new div to each target element
-    targetElement.append(newDiv.cloneNode(true))
+    targetElement.append(newDiv)
+
 
 }
 
@@ -346,7 +357,7 @@ function addImage(fname,height) {
 
 // }
 
-function updateDisplay(json) {
+function initDisplay(json) {
     names.length = json.length
     json.forEach((player,index)=>
     {
@@ -374,11 +385,11 @@ fetch('./players.json')
     .then((response) => response.json())
     .then((json) => {
         data = json
-        updateDisplay(json)
+        initDisplay(json)
         offset = window.innerWidth/2 - track.clientWidth + getMiddle();
         console.log("Get width",(getWidth()[0]))
         track.animate({ transform: `translate(${window.innerWidth/2 - track.clientWidth + getMiddle()}px)`},{duration:500, fill:"forwards"})
-        console.log("HEHLRLHRL")
+        highlightPlayer()
         console.log("Next Percentage",nextPercentage ? nextPercentage : 0)
         track.style.transform = `translate(${track.clientWidth + (offset)})px)`
         document.querySelectorAll('.textbox').forEach(setTextboxes);
