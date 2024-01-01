@@ -95,6 +95,8 @@ body {
     margin: 0;
     display: flex;
     justify-content: center;
+    transition: all 0.3s ease;
+
     /* border: 1px dashed blue; */
 
 }
@@ -113,7 +115,9 @@ div.selected-image-div img {
 }
 div.selected-image-div img {
     transform: scale(1.1);
-    transition: all 0.3s ease;
+}
+div.selected-image-div.highlighted-image-div {
+    transform: scale(1.01);
 }
 
 .highlighted-image-div img {

@@ -142,6 +142,7 @@ const getWidth = ()=> {
 */
 
 function autoSelectPlayer() {
+    
     let pos = track.clientWidth * track.dataset.percentage/100,
     playersMoved =  Math.round(pos/getWidth())
     //console.log(`Highlighting the ${playersMoved} player`)
@@ -150,7 +151,6 @@ function autoSelectPlayer() {
     if(selectedPLayerDiv) selectedPLayerDiv.classList.remove("selected-image-div");
     selectedPLayerDiv = track.childNodes[track.childNodes.length-playersMoved-1]
     selectedPLayerDiv.classList.add("selected-image-div")
-    console.log(selectedPLayerDiv)
 }
 
 function selectPLayer(playerName) {
