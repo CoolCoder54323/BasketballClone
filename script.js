@@ -12,7 +12,7 @@ let nextPercentage;
 let mouseSelected = false
 
 let largestImage = ["",0]
-let highlightedPLayerDiv;
+let selectedPLayerDiv;
 
 let backgroundImage = document.querySelector('.content');
 let hashMap = new Map();
@@ -43,7 +43,7 @@ window.onmouseup = (mouse) => {
     
     track.animate({ transform: `translate(${newX + offset}px)`},{duration:500, fill:"forwards"})
     track.dataset.percentage = track.dataset.pastPercent = ((((newX)/track.clientWidth)*100))
-    selectPlayer()
+    autoSelectPlayer()
 
 }
 
@@ -55,7 +55,7 @@ window.onmousemove = e => {
           maxDelta = window.innerWidth / 2,
           percentage = (mouseDelta/maxDelta) * -100
     moveImage(percentage)
-    selectPlayer()
+    autoSelectPlayer()
 
     // backgroundImage.animate({backgroundPositionX: `${-(nextPercentage)*50 + width}px`},{duration:500, fill:"forwards"})
 }
@@ -90,21 +90,7 @@ document.addEventListener('keydown', (event) => {
 
     }
     if(event.code === 'KeyT'){
-        imgs = document.querySelectorAll(".image-div")
-        console.log(imgs)
-        imgs.forEach((img)=>{
-            console.log("img",img.style.justifyContent)
-            if(img.style.justifyContent === "flex-start"){
-                img.style.justifyContent = "center"
-            }
-            else if(img.style.justifyContent === "center"){
-                img.style.justifyContent = "flex-start"
-            }
-            else {
-                img.style.justifyContent = "center"
-            }
-            
-        })
+
     }
 
 });
@@ -155,28 +141,26 @@ const getWidth = ()=> {
         Set utility functions
 */
 
-function selectPlayer() {
+function autoSelectPlayer() {
     let pos = track.clientWidth * track.dataset.percentage/100,
     playersMoved =  Math.round(pos/getWidth())
     //console.log(`Highlighting the ${playersMoved} player`)
-    if(highlightedPLayerDiv == track.childNodes[track.childNodes.length-playersMoved-1]) return;
+    if(selectedPLayerDiv == track.childNodes[track.childNodes.length-playersMoved-1]) return;
 
-    if(highlightedPLayerDiv) highlightedPLayerDiv.childNodes[0].classList.remove("selected-image-div");
-    highlightedPLayerDiv = track.childNodes[track.childNodes.length-playersMoved-1]
-    highlightedPLayerDiv.childNodes[0].classList.add("selected-image-div")
+    if(selectedPLayerDiv) selectedPLayerDiv.classList.remove("selected-image-div");
+    selectedPLayerDiv = track.childNodes[track.childNodes.length-playersMoved-1]
+    selectedPLayerDiv.classList.add("selected-image-div")
+    console.log(selectedPLayerDiv)
+}
+
+function selectPLayer(playerName) {
+    
+
 }
 
 function setTextboxes(textbox) {
     textbox.value = ""
     textbox.oninput = updateTextbox
-    textbox.onclick = ()=>{
-        console.log("HELLO",textbox.value,textbox.id)
-
-        // if(textbox.value === ""){
-        //     animateColor()
-        //     addStylesheetRule(`#${id}.textbox::placeholder { color: white; }`);
-        // }
-    }
     textbox.oninput();
 }
 
@@ -263,16 +247,27 @@ function addImage(fname,height) {
     const newDiv = document.createElement("div");
     newDiv.className = "image-div";
     newDiv.appendChild(dynamicImage);
-    newDiv.addEventListener('mouseover',()=>{
+    newDiv.onmouseover = ()=>{
         if(track.dataset.mouseDownAt !== "0") return;
         mouseSelected = true;
-        dynamicImage.classList.add("highlighted-image-div")
-    })
-    newDiv.addEventListener("mouseleave",()=>{
+        newDiv.classList.add("highlighted-image-div")
+    }
+    newDiv.onmouseleave = ()=>{
         if(track.dataset.mouseDownAt !== "0") return;
         mouseSelected = false;
-        dynamicImage.classList.remove("highlighted-image-div")
-    })
+        newDiv.classList.remove("highlighted-image-div")
+    }
+    newDiv.onclick = ()=>{
+        if(!newDiv.classList.contains("selected-image-div")){
+            let index = 0;
+            track.childNodes.forEach((value,key)=>{
+                if(value == newDiv){
+                    index = key;
+                }
+            })
+            
+        }
+    }
 
     document.querySelector(".images").append(newDiv)
     largestImage = fratio > largestImage[1] ? [fname,fratio] : largestImage
@@ -324,7 +319,7 @@ fetch('./players.json')
         offset = window.innerWidth/2 - track.clientWidth + getWidth()/2;
         console.log("Width =",(getWidth()))
         track.animate({ transform: `translate(${window.innerWidth/2 - track.clientWidth + getWidth()/2}px)`},{duration:500, fill:"forwards"})
-        selectPlayer()
+        autoSelectPlayer()
         console.log("Next Percentage",nextPercentage ? nextPercentage : 0)
         track.style.transform = `translate(${track.clientWidth + (offset)})px)`
         document.querySelectorAll('.textbox').forEach(setTextboxes);
