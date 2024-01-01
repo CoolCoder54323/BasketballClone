@@ -180,7 +180,7 @@ function setTextboxes(textbox) {
     textbox.oninput();
 }
 
-function updateTextboxes() {
+function updateTextbox() {
     let id = this.id.split('-')[0]
     let value = this.value;
     this.value = value.replace(/[^0-9]/g, '');
@@ -321,9 +321,9 @@ fetch('./players.json')
     .then((response) => response.json())
     .then((json) => {
         initDisplay(json)
-        offset = window.innerWidth/2 - track.clientWidth + getWidth()/2();
+        offset = window.innerWidth/2 - track.clientWidth + getWidth()/2;
         console.log("Width =",(getWidth()))
-        track.animate({ transform: `translate(${window.innerWidth/2 - track.clientWidth + getWidth()/2()}px)`},{duration:500, fill:"forwards"})
+        track.animate({ transform: `translate(${window.innerWidth/2 - track.clientWidth + getWidth()/2}px)`},{duration:500, fill:"forwards"})
         selectPlayer()
         console.log("Next Percentage",nextPercentage ? nextPercentage : 0)
         track.style.transform = `translate(${track.clientWidth + (offset)})px)`
