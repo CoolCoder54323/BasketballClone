@@ -4,6 +4,8 @@ let APG = 0
 let TRB = 0
 let IMAGEMODE = "Max"
 
+let moved = false;
+
 const MAX = 378
 const track = document.querySelector(".images");
 
@@ -24,11 +26,14 @@ var names = [""]
 
 //Set listeners
 window.onmousedown = e => {
+   if(e.target.classList.contains("textbox-container")) return;
    track.dataset.mouseDownAt = e.clientX;
    console.log("Press at:" + track.dataset.mouseDownAt)
+   
 }
 window.onmouseup = (mouse) => {
     track.dataset.mouseDownAt = "0"
+    if(!moved) return;
     // track.animate({backgroundPositionX: `${track.dataset.percentage}%`},
     //               {duration:500, fill:"forwards",    animationTimingFunction: "ease"})
     // backgroundImage.animate({backgroundPositionX: `${-(track.dataset.percentage) + width}px`},
@@ -44,11 +49,14 @@ window.onmouseup = (mouse) => {
     track.animate({ transform: `translate(${newX + offset}px)`},{duration:500, fill:"forwards"})
     track.dataset.percentage = track.dataset.pastPercent = ((((newX)/track.clientWidth)*100))
     autoSelectPlayer()
+    moved = false
 
 }
 
 window.onmousemove = e => {
-
+    
+    moved = true;
+    if(e.target.classList.contains("textbox-container")) return;
     if(track.dataset.mouseDownAt==="0") return;
 
     const mouseDelta = parseFloat(track.dataset.mouseDownAt) - e.clientX,
@@ -258,15 +266,30 @@ function addImage(fname,height) {
         newDiv.classList.remove("highlighted-image-div")
     }
     newDiv.onclick = ()=>{
-        if(!newDiv.classList.contains("selected-image-div")){
-            let index = 0;
-            track.childNodes.forEach((value,key)=>{
-                if(value == newDiv){
-                    index = key;
-                }
-            })
-            
+        if(newDiv === selectedPLayerDiv || moved===true) return;
+
+        let newIndex = 0,
+            startingIndex = 0;
+        track.childNodes.forEach((value,key)=>{
+            if(value == newDiv){
+                newIndex = key;
+            }
+            if(value == selectedPLayerDiv) {
+                startingIndex = key;
+            }
+        })
+        console.log("Percent", (getWidth()*(hashMap.size-newIndex))/track.clientWidth)
+        let newX = (getWidth()*(hashMap.size-newIndex-1));   
+        offset = window.innerWidth/2 - track.clientWidth + getWidth()/2
+        if(selectedPLayerDiv){
+            selectedPLayerDiv.classList.remove("selected-image-div")
         }
+        selectedPLayerDiv = newDiv
+        newDiv.classList.add("selected-image-div")
+        track.animate({ transform: `translate(${newX + offset}px)`},{duration:400, fill:"forwards", easing:"cubic-bezier(.17,.67,.37,1.02)"})
+        track.dataset.percentage = track.dataset.pastPercent = (((newX/track.clientWidth)*100))   
+        
+
     }
 
     document.querySelector(".images").append(newDiv)
@@ -300,6 +323,7 @@ function initDisplay(json) {
     addImages(names,IMAGEMODE)
 
 }
+
 
 function moveImage(percentage) {
     offset = window.innerWidth/2 - track.clientWidth + getWidth()/2
