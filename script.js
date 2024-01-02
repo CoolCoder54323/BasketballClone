@@ -254,6 +254,7 @@ function addImage(fname,height) {
 
     const newDiv = document.createElement("div");
     newDiv.className = "image-div";
+    newDiv.id = fname
     newDiv.appendChild(dynamicImage);
     newDiv.onmouseover = ()=>{
         if(track.dataset.mouseDownAt !== "0") return;
@@ -270,14 +271,7 @@ function addImage(fname,height) {
 
         let newIndex = 0,
             startingIndex = 0;
-        track.childNodes.forEach((value,key)=>{
-            if(value == newDiv){
-                newIndex = key;
-            }
-            if(value == selectedPLayerDiv) {
-                startingIndex = key;
-            }
-        })
+        newIndex = getImageIndex(newDiv)
         console.log("Percent", (getWidth()*(hashMap.size-newIndex))/track.clientWidth)
         let newX = (getWidth()*(hashMap.size-newIndex-1));   
         offset = window.innerWidth/2 - track.clientWidth + getWidth()/2
@@ -289,22 +283,36 @@ function addImage(fname,height) {
         track.animate({ transform: `translate(${newX + offset}px)`},{duration:400, fill:"forwards", easing:"cubic-bezier(.17,.67,.37,1.02)"})
         track.dataset.percentage = track.dataset.pastPercent = (((newX/track.clientWidth)*100))   
         
-
     }
 
     document.querySelector(".images").append(newDiv)
     largestImage = fratio > largestImage[1] ? [fname,fratio] : largestImage
 }
 
+function getImageIndex(imageDiv) {
+    let idx = 0
+    track.childNodes.forEach((value,key)=>{
+        if(value === imageDiv){
+            idx = key;
+        }
+    })
+    return idx
+}
+
 function removeImages(removeList,dur){
+
+    if(removeList.length == 0) return;
     
     multiplier = removeList.length
 
     removeList.forEach((name)=>{
         let imageDiv = document.querySelector("." + name)
-        imageDiv.animate({width: "0px"},{duration:dur})
+        imageDiv.animate({width: "0px", transform: "scale(0)"},{fill:"backwards",duration:dur})
     })
     setTimeout(()=>{addImages(names,heightMode=IMAGEMODE)}, dur)
+    // let pos = window.innerWidth/2 - getWidth()/2;
+    track.animate({ transform: `translate(${window.innerWidth/2 - track.clientWidth + getWidth()/2 + getWidth()*removeList.length}px)`},{duration:dur, fill:"forwards"})
+
 
 }
 
@@ -340,12 +348,12 @@ fetch('./players.json')
     .then((response) => response.json())
     .then((json) => {
         initDisplay(json)
-        offset = window.innerWidth/2 - track.clientWidth + getWidth()/2;
+        offset = window.innerWidth/2 - getWidth()/2;
         console.log("Width =",(getWidth()))
         track.animate({ transform: `translate(${window.innerWidth/2 - track.clientWidth + getWidth()/2}px)`},{duration:500, fill:"forwards"})
         autoSelectPlayer()
         console.log("Next Percentage",nextPercentage ? nextPercentage : 0)
-        track.style.transform = `translate(${track.clientWidth + (offset)})px)`
+        //track.style.transform = `translate(${(offset)})px)`
         document.querySelectorAll('.textbox').forEach(setTextboxes);
     }).catch(error => console.error('Error:', error));
 
